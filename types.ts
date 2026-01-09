@@ -15,42 +15,38 @@ export interface InventoryItem {
   minThreshold: number;
   expiryDate?: string;
   lastUpdated: string;
+  pricePerUnit: number;
+}
+
+export interface UsageHistory {
+  id: string;
+  itemId: string;
+  itemName: string;
+  date: string;
+  quantityConsumed: number;
+  unit: string;
 }
 
 export interface Supplier {
   id: string;
   name: string;
   contact: string;
+  phone: string;
   category: string;
-}
-
-export interface OrderItem {
-  itemId: string;
-  name: string;
-  quantity: number;
-  unit: string;
-}
-
-export interface SupplierOrder {
-  id: string;
-  supplierId: string;
-  supplierName: string;
-  items: OrderItem[];
-  status: OrderStatus;
-  createdAt: string;
-  totalEstimatedCost?: number;
-}
-
-export interface AppNotification {
-  id: string;
-  type: 'warning' | 'info' | 'success';
-  message: string;
-  timestamp: string;
-  isRead: boolean;
+  reliability: number; // 0-100
 }
 
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   isThinking?: boolean;
+}
+
+export interface AppNotification {
+  id: string;
+  type: 'critical' | 'warning' | 'info' | 'success';
+  title: string;
+  message: string;
+  timestamp: string;
+  isRead: boolean;
 }

@@ -1,6 +1,6 @@
 {
-  "name": "Asistente de Cocina IA",
-  "description": "An intelligent kitchen inventory and supplier management system with AI-driven insights, automated reminders, and visual receipt/pantry scanning.",
+  "name": "Blanquita IA",
+  "description": "Sistema inteligente de inventario y gestión de proveedores con IA, recordatorios automáticos y escaneo visual de productos.",
   "requestFramePermissions": [
     "camera"
   ]

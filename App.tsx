@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   LayoutDashboard, Package, Truck, Bell, MessageSquare, Camera, Plus, Search,
@@ -8,7 +7,7 @@ import {
   Settings, LogOut, Check, X, Filter, Info, ArrowUpDown, ChevronDown, Menu
 } from 'lucide-react';
 import { InventoryItem, Supplier, AppNotification, ChatMessage, UsageHistory } from './types';
-import { GeminiService } from './services/geminiService';
+import { GeminiService } from './geminiService';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 
 // --- MOCK DATA ---
@@ -770,7 +769,6 @@ const OrdersView: React.FC<{ suppliers: Supplier[]; suggestion: string | null; o
           <div key={s.id} className="bg-zinc-900 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-white/5 hover:border-emerald-500/20 transition-all group shadow-2xl relative overflow-hidden">
             <div className="flex justify-between items-start mb-6 md:mb-10">
               <div className="w-12 h-12 md:w-16 md:h-16 bg-black rounded-xl md:rounded-2xl flex items-center justify-center text-emerald-500 shadow-xl group-hover:scale-110 transition-transform border border-white/5 shrink-0">
-                {/* Fix: use Tailwind classes for responsive sizing as Lucide doesn't support 'md:size' */}
                 <Truck className="w-6 h-6 md:w-8 md:h-8" />
               </div>
               <div className="text-right">
@@ -831,7 +829,6 @@ const ChatView: React.FC<{ messages: ChatMessage[]; onSend: (msg: string) => voi
         {messages.length === 0 && (
           <div className="text-center py-10 md:py-20">
             <div className="w-16 h-16 md:w-24 md:h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 border border-white/5">
-              {/* Fix: use Tailwind classes for responsive sizing as Lucide doesn't support 'md:size' */}
               <MessageSquare className="w-8 h-8 md:w-12 md:h-12 text-slate-800" />
             </div>
             <p className="font-black text-xl md:text-2xl text-slate-400 tracking-tight px-4">Centro de Inteligencia Gastronómica</p>
@@ -863,7 +860,6 @@ const ChatView: React.FC<{ messages: ChatMessage[]; onSend: (msg: string) => voi
           onChange={(e) => setInput(e.target.value)} 
         />
         <button type="submit" disabled={isLoading} className="w-12 md:w-20 bg-emerald-500 text-black rounded-xl md:rounded-3xl hover:bg-emerald-400 transition-all shadow-2xl flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
-          {/* Fix: use Tailwind classes for responsive sizing as Lucide doesn't support 'md:size' */}
           <Send className="w-5 h-5 md:w-7 md:h-7" />
         </button>
       </form>
@@ -875,7 +871,6 @@ const ScanView: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-full space-y-10 md:space-y-16 animate-in zoom-in-95 duration-700 p-6">
     <div className="relative">
       <div className="w-48 h-48 md:w-64 md:h-64 bg-emerald-500/10 border-2 border-dashed border-emerald-500/30 rounded-[3rem] md:rounded-[4rem] flex items-center justify-center text-emerald-500 shadow-[0_0_80px_rgba(16,185,129,0.15)] relative group cursor-pointer transition-all hover:border-emerald-500/60 hover:bg-emerald-500/20">
-        {/* Fix: use Tailwind classes for responsive sizing as Lucide doesn't support 'md:size' */}
         <Camera strokeWidth={1} className="w-16 h-16 md:w-[100px] md:h-[100px] group-hover:scale-110 transition-transform duration-500" />
       </div>
       <div className="absolute inset-0 bg-emerald-500/10 blur-[100px] md:blur-[150px] rounded-full -z-10 animate-pulse"></div>

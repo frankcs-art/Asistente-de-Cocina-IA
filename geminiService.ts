@@ -1,6 +1,5 @@
-
 import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
-import { InventoryItem, UsageHistory } from "../types";
+import { InventoryItem, UsageHistory } from "./types";
 
 export class GeminiService {
   private static getClient() {
@@ -17,11 +16,21 @@ export class GeminiService {
     const model = 'gemini-3-pro-preview';
     
     const inventoryContext = `Inventario Actual: ${JSON.stringify(inventory)}`;
-    const systemInstruction = `Eres un asistente experto en logística para restaurantes de alta gama (Estrella Michelin). 
-    Tienes acceso al inventario: ${inventoryContext}. 
-    Analiza y responde con precisión técnica sobre stock, mermas y pedidos.
-    Si te piden una receta, intenta usar productos que estén cerca de caducar o tengan exceso de stock.
-    Responde SIEMPRE en español de España con un tono sofisticado, profesional y analítico.`;
+    const systemInstruction = `
+### ROL
+Actúa como un analista experto en gestión de inventarios.
+
+### CRITERIOS DE ANÁLISIS
+Focalízate exclusivamente en ítems que:
+1. Estén próximos a caducar.
+2. Presenten un exceso de stock.
+
+### REGLAS DE COMUNICACIÓN (OBLIGATORIAS)
+- **Idioma:** Responder SIEMPRE en español de España (neutro, sin modismos latinos).
+- **Tono:** Sofisticado, profesional y analítico. Evita el lenguaje coloquial.
+- **Enfoque:** Prioriza la precisión y la propuesta de soluciones estratégicas.
+
+Contexto del inventario: ${inventoryContext}`;
 
     const response = await ai.models.generateContent({
       model,

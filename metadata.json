@@ -1,0 +1,7 @@
+{
+  "name": "Asistente de Cocina IA",
+  "description": "An intelligent kitchen inventory and supplier management system with AI-driven insights, automated reminders, and visual receipt/pantry scanning.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

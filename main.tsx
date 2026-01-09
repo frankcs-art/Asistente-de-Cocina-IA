@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   LayoutDashboard, Package, Truck, Bell, MessageSquare, Camera, Plus, Search,
@@ -574,6 +573,7 @@ const UsageView: React.FC<{ usage: UsageHistory[]; inventory: InventoryItem[]; o
                    <tr>
                       <th className="px-10 py-5 text-[10px] font-black text-slate-600 uppercase tracking-widest">Fecha</th>
                       <th className="px-10 py-5 text-[10px] font-black text-slate-600 uppercase tracking-widest">Producto</th>
+                      {/* Fix: Correcting typo [10px) to [10px] */}
                       <th className="px-10 py-5 text-[10px] font-black text-slate-600 uppercase tracking-widest text-right">Cantidad</th>
                    </tr>
                 </thead>

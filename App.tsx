@@ -41,7 +41,7 @@ const CATEGORY_THEMES: Record<string, string> = {
 };
 
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'inventory' | 'orders' | 'chat' | 'scan' | 'notifications' | 'usage'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'inventory' | 'orders' | 'chat' | 'scan' | 'notifications' | 'usage' | 'settings'>('dashboard');
   const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY);
   const [usage, setUsage] = useState<UsageHistory[]>(MOCK_USAGE);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
@@ -51,6 +51,7 @@ const App: React.FC = () => {
   const [isThinking, setIsThinking] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('GEMINI_API_KEY') || '');
 
   // Stats
   const stats = useMemo(() => ({
@@ -58,6 +59,16 @@ const App: React.FC = () => {
     criticalItems: inventory.filter(i => i.quantity <= i.minThreshold).length,
     unreadNotifications: notifications.filter(n => !n.isRead).length
   }), [inventory, notifications]);
+
+  // Sync API Key with GeminiService
+  useEffect(() => {
+    GeminiService.setApiKey(apiKey);
+    if (apiKey) {
+      localStorage.setItem('GEMINI_API_KEY', apiKey);
+    } else {
+      localStorage.removeItem('GEMINI_API_KEY');
+    }
+  }, [apiKey]);
 
   // Sync notifications with inventory
   useEffect(() => {
@@ -158,6 +169,9 @@ const App: React.FC = () => {
         
         <p className="px-4 py-2 mt-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Logística</p>
         <NavItem active={activeTab === 'orders'} onClick={() => handleTabChange('orders')} icon={<Truck size={18} />} label="Proveedores" />
+
+        <p className="px-4 py-2 mt-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sistema</p>
+        <NavItem active={activeTab === 'settings'} onClick={() => handleTabChange('settings')} icon={<Settings size={18} />} label="Configuración" />
       </nav>
 
       <div className="p-4 md:p-6 m-4 bg-white/5 rounded-3xl border border-white/5 backdrop-blur-md">
@@ -231,7 +245,10 @@ const App: React.FC = () => {
                 </span>
               )}
             </button>
-            <button className="p-2.5 md:p-3 bg-white/5 border border-white/10 rounded-2xl text-slate-400 hover:text-white transition-all sm:flex hidden">
+            <button
+              onClick={() => handleTabChange('settings')}
+              className={`p-2.5 md:p-3 bg-white/5 border border-white/10 rounded-2xl text-slate-400 hover:text-white transition-all sm:flex hidden ${activeTab === 'settings' ? 'border-emerald-500/50 bg-emerald-500/5 text-emerald-400' : ''}`}
+            >
               <Settings size={20} />
             </button>
           </div>
@@ -246,6 +263,7 @@ const App: React.FC = () => {
           {activeTab === 'scan' && <ScanView />}
           {activeTab === 'notifications' && <NotificationsView notifications={notifications} markAllAsRead={markAllAsRead} />}
           {activeTab === 'usage' && <UsageView usage={usage} inventory={inventory} onRecordUsage={recordUsage} />}
+          {activeTab === 'settings' && <SettingsView apiKey={apiKey} setApiKey={setApiKey} />}
         </div>
       </main>
     </div>
@@ -272,10 +290,10 @@ const DashboardView: React.FC<{ stats: any; inventory: InventoryItem[]; getDaily
         <div className="lg:col-span-2 bg-gradient-to-br from-zinc-900 to-black p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/5 relative overflow-hidden flex flex-col justify-between shadow-2xl">
            <div className="relative z-10 max-w-lg">
               <span className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[9px] md:text-[10px] font-black uppercase tracking-widest rounded-full mb-4 md:mb-6 border border-emerald-500/20">
-                <Sparkles size={12} /> IA Logística y Previsión
+                <Sparkles size={12} /> IA Logística y Previsión de pedidos Recetario.
               </span>
-              <h3 className="text-2xl md:text-4xl font-black text-white leading-tight">Optimiza tu cocina con inteligencia real.</h3>
-              <p className="text-slate-500 mt-2 md:mt-4 text-sm md:text-base font-medium leading-relaxed">Analizamos tu consumo diario para sugerir compras inteligentes y reducir mermas.</p>
+              <h3 className="text-2xl md:text-4xl font-black text-white leading-tight">Optimiza tu cocina <br/>con inteligencia real sugerencia de menús diarios.</h3>
+              <p className="text-slate-500 mt-2 md:mt-4 text-sm md:text-base font-medium leading-relaxed">Analizamos tu consumo diario para sugerir compras inteligentes y reducir mermas directo a WhatsApp.</p>
            </div>
            <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 relative z-10">
              <button 
@@ -284,13 +302,13 @@ const DashboardView: React.FC<{ stats: any; inventory: InventoryItem[]; getDaily
                className="bg-emerald-500 hover:bg-emerald-400 text-black px-6 md:px-8 py-3.5 md:py-4 rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all shadow-[0_15px_40px_-10px_rgba(16,185,129,0.5)] active:scale-95 flex items-center justify-center gap-3"
              >
                {isLoading ? <Loader2 className="animate-spin" size={18} /> : <BrainCircuit size={18} />}
-               Recomendación de Compra
+               Recomendación de Compra por historial
              </button>
              <button 
                 onClick={() => setTab('chat')}
                 className="px-6 md:px-8 py-3.5 md:py-4 bg-white/5 hover:bg-white/10 text-white rounded-xl md:rounded-2xl font-black text-xs md:text-sm transition-all border border-white/10 active:scale-95 flex items-center justify-center"
              >
-               Consultar IA
+               Consultar a Blanquita IA
              </button>
            </div>
            <div className="absolute top-[-50px] right-[-50px] w-64 md:w-96 h-64 md:h-96 bg-emerald-500/10 blur-[80px] md:blur-[120px] rounded-full pointer-events-none"></div>
@@ -316,11 +334,11 @@ const DashboardView: React.FC<{ stats: any; inventory: InventoryItem[]; getDaily
         </div>
         <div className="bg-zinc-900/50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 flex flex-col gap-3 md:gap-4">
            <div className="flex items-center justify-between">
-              <p className="text-[9px] md:text-[10px] font-black text-slate-600 uppercase tracking-widest">Ahorro IA</p>
+              <p className="text-[9px] md:text-[10px] font-black text-slate-600 uppercase tracking-widest">Ahorro IA Semanal</p>
               <ArrowUpRight size={16} className="text-indigo-400" />
            </div>
            <p className="text-2xl md:text-4xl font-black text-white">412€</p>
-           <p className="text-[10px] text-indigo-400 font-bold uppercase tracking-wide">Semanal</p>
+           <p className="text-[10px] text-indigo-400 font-bold uppercase tracking-wide">Optimización proveedores</p>
         </div>
         <div className="bg-zinc-900/50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 flex flex-col gap-3 md:gap-4 sm:col-span-2 md:col-span-1">
            <div className="flex items-center justify-between">
@@ -379,7 +397,7 @@ const InventoryView: React.FC<{ inventory: InventoryItem[]; searchTerm: string; 
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-xl md:text-2xl font-black text-white">Stock Estratégico</h3>
-              <p className="text-slate-500 text-xs md:text-sm mt-0.5 md:mt-1">Gestión de suministros gourmet</p>
+              <p className="text-slate-500 text-xs md:text-sm mt-0.5 md:mt-1">Control de Productos de Comida Nacional</p>
             </div>
             <button className="sm:hidden p-3 bg-emerald-500 text-black rounded-xl shadow-lg active:scale-90">
               <Plus size={20} />
@@ -888,5 +906,41 @@ const ScanView: React.FC = () => (
     </div>
   </div>
 );
+
+const SettingsView: React.FC<{ apiKey: string; setApiKey: (k: string) => void }> = ({ apiKey, setApiKey }) => {
+  const [input, setInput] = useState(apiKey);
+
+  return (
+    <div className="max-w-2xl mx-auto w-full space-y-8 animate-in fade-in duration-500">
+      <div className="bg-zinc-900 p-8 rounded-[2.5rem] border border-white/5 shadow-2xl space-y-8">
+        <div>
+          <h3 className="text-2xl font-black text-white">Configuración del Sistema</h3>
+          <p className="text-slate-500 mt-2">Gestiona tus credenciales y preferencias de IA.</p>
+        </div>
+
+        <div className="space-y-4">
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Gemini API Key</label>
+          <div className="relative">
+            <input
+              type="password"
+              placeholder="Introduce tu API Key..."
+              className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none font-bold focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/40 text-slate-200 placeholder:text-slate-700 transition-all"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+          </div>
+          <p className="text-[10px] text-slate-600 px-1 italic">Tus datos se guardan de forma segura en el almacenamiento local de tu navegador.</p>
+        </div>
+
+        <button
+          onClick={() => { setApiKey(input); alert('Configuración guardada correctamente.'); }}
+          className="w-full bg-emerald-500 py-5 rounded-3xl text-black font-black text-lg hover:bg-emerald-400 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-3"
+        >
+          <CheckCircle2 size={24} /> Guardar Configuración
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default App;

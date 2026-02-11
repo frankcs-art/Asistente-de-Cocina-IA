@@ -1,20 +1,34 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Blanquita IA - Asistente de Cocina Inteligente
 
-# Run and deploy your AI Studio app
+Sistema inteligente de inventario y gestión de proveedores con IA, recordatorios automáticos y escaneo visual de productos.
 
-This contains everything you need to run your app locally.
+![Screenshot](public/screenshot.png)
 
-View your app in AI Studio: https://ai.studio/apps/drive/1FJ-ZQCuuvh-siHTrIXsA18MwRYlYgYpr
+## Características
 
-## Run Locally
+- **Panel de Control:** Visualización de métricas clave y eficiencia operativa.
+- **Gestión de Inventario:** Control detallado de stock con alertas de nivel crítico.
+- **Logística Predictiva:** Generación de órdenes de compra sugeridas basadas en el historial de consumo.
+- **Asistente IA:** Chatbot especializado en análisis de inventario y sugerencias gastronómicas.
+- **Visión Artificial:** Escaneo de albaranes y etiquetas para automatización de datos.
 
-**Prerequisites:**  Node.js
+## Configuración de la API Key
 
+Para que las funciones de IA funcionen correctamente, debes configurar tu propia Gemini API Key:
 
-1. Install dependencies:
+1. Inicia la aplicación.
+2. Navega a la pestaña **Configuración** en el menú lateral.
+3. Introduce tu Gemini API Key en el campo correspondiente.
+4. Haz clic en **Guardar Configuración**.
+
+Tus credenciales se guardarán de forma segura en el almacenamiento local de tu navegador.
+
+## Ejecución Local
+
+**Requisitos:** Node.js
+
+1. Instalar dependencias:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. Iniciar la aplicación:
    `npm run dev`
+3. Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
